@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biology Flashcard Quiz: Evolutionary Concepts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #26d0ce;
+        }
+        
+        h1 {
+            color: #1a2980;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score-container {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a2980;
+        }
+        
+        .question-counter {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        
+        .question-box {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #26d0ce;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #222;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .option {
+            padding: 18px 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option.selected {
+            transform: scale(1.02);
+        }
+        
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .option-label {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background-color: #1a2980;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .option.correct .option-label {
+            background-color: #28a745;
+        }
+        
+        .option.incorrect .option-label {
+            background-color: #dc3545;
+        }
+        
+        .feedback {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            display: block;
+        }
+        
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+            display: block;
+        }
+        
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .correct-answer {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(26, 41, 128, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-3px);
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+        
+        .start-screen, .results-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .icon-large {
+            font-size: 4rem;
+            color: #26d0ce;
+            margin-bottom: 20px;
+        }
+        
+        .instructions {
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .instructions h3 {
+            color: #1a2980;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .topic-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .topic-tag {
+            background-color: #e9f7fe;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #1a2980;
+            border: 1px solid #b3e0f2;
+        }
+        
+        .results-container {
+            padding: 30px;
+        }
+        
+        .score-display {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #1a2980;
+            margin: 20px 0;
+        }
+        
+        .score-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .emoji-result {
+            font-size: 3rem;
+            margin: 20px 0;
+        }
+        
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .btn-win {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+        }
+        
+        .btn-win:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(255, 65, 108, 0.3);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .score-display {
+                font-size: 4rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="start-screen">
+            <div class="icon-large">
+                <i class="fas fa-dna"></i>
+            </div>
+            <header>
+                <h1>Biology Flashcard Quiz</h1>
+                <div class="subtitle">Evolution, Natural Selection & Phylogenetics</div>
+            </header>
+            
+            <div class="instructions">
+                <h3>Test Your Knowledge of Evolutionary Biology</h3>
+                <p>This quiz covers key concepts from General Biology 2, including:</p>
+                <ul>
+                    <li>Natural selection and evolutionary mechanisms</li>
+                    <li>Phylogenetic trees and systematics</li>
+                    <li>Recombinant DNA technology</li>
+                    <li>Evidence for evolution</li>
+                    <li>Geological time scale and history of life</li>
+                </ul>
+                <p><strong>How it works:</strong></p>
+                <ul>
+                    <li>50 multiple-choice questions with 4 options each</li>
+                    <li>Click an answer to see immediate feedback</li>
+                    <li>Correct answers turn green, incorrect ones turn red</li>
+                    <li>Your score updates in real-time</li>
+                    <li>Progress through questions with the "Next" button</li>
+                </ul>
+            </div>
+            
+            <div class="topic-list">
+                <span class="topic-tag">Natural Selection</span>
+                <span class="topic-tag">Genetic Drift</span>
+                <span class="topic-tag">Phylogenetic Trees</span>
+                <span class="topic-tag">Recombinant DNA</span>
+                <span class="topic-tag">Geological Time Scale</span>
+                <span class="topic-tag">Horizontal Gene Transfer</span>
+                <span class="topic-tag">Mass Extinctions</span>
+                <span class="topic-tag">Taxonomy</span>
+            </div>
+            
+            <button id="start-btn" class="btn btn-primary" style="margin-top: 30px; padding: 18px 50px;">
+                <i class="fas fa-play-circle"></i> Start Now
+            </button>
+        </div>
+        
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <header>
+                <h1>Biology Flashcard Quiz</h1>
+                <div class="subtitle">Test your evolutionary biology knowledge</div>
+            </header>
+            
+            <div class="stats">
+                <div class="score-container">
+                    <i class="fas fa-chart-line"></i> Score: <span id="score">0</span>/50
+                </div>
+                <div class="question-counter">
+                    Question <span id="current-question">1</span> of 50
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+            
+            <div class="question-box">
+                <div id="question-text" class="question-text">
+                    <!-- Question will be inserted here -->
+                </div>
+                
+                <div id="options-container" class="options-container">
+                    <!-- Options will be inserted here -->
+                </div>
+                
+                <div id="feedback" class="feedback">
+                    <!-- Feedback will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button id="prev-btn" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button id="next-btn" class="btn btn-primary">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results-screen" class="results-screen hidden">
+            <div class="icon-large">
+                <i class="fas fa-award"></i>
+            </div>
+            <header>
+                <h1>Quiz Complete!</h1>
+                <div class="subtitle">Here's how you performed</div>
+            </header>
+            
+            <div class="results-container">
+                <div class="score-display" id="final-score">0/50</div>
+                <div class="score-message" id="score-message">Calculating your result...</div>
+                <div class="emoji-result" id="emoji-result">😊</div>
+                
+                <div class="btn-container">
+                    <button id="try-again-btn" class="btn btn-success">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                    <button id="win-btn" class="btn btn-win">
+                        <i class="fas fa-crown"></i> Nah I'd Win 💀
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Biology Flashcard Quiz | Based on General Biology 2 Curriculum | Created with HTML, CSS & JavaScript</p>
+    </div>
+
+    <script>
+        // Quiz questions array
+        const questions = [
+            {
+                question: "Which of the following is NOT one of the four main mechanisms of evolution?",
+                options: ["Natural selection", "Genetic drift", "Gene flow", "Photosynthesis"],
+                answer: 3,
+                explanation: "Photosynthesis is a metabolic process, not an evolutionary mechanism. The four main mechanisms are natural selection, genetic drift, mutation, and gene flow."
+            },
+            {
+                question: "What is the term for the process by which individuals with beneficial heritable traits survive, reproduce, and pass these traits to the next generation?",
+                options: ["Genetic drift", "Mutation", "Natural selection", "Gene flow"],
+                answer: 2,
+                explanation: "Natural selection is the process described by Darwin and Wallace where individuals with advantageous traits are more likely to survive and reproduce."
+            },
+            {
+                question: "According to the geological time scale, which eon makes up approximately 88% of Earth's history?",
+                options: ["Phanerozoic", "Proterozoic", "Precambrian", "Hadean"],
+                answer: 2,
+                explanation: "The Precambrian (which includes Hadean, Archean, and Proterozoic eons) makes up about 88% of Earth's history."
+            },
+            {
+                question: "What was the first mass extinction event called, which wiped out many anaerobic organisms due to increasing oxygen levels?",
+                options: ["Permian-Triassic extinction", "Cretaceous-Paleogene extinction", "Great Oxidation Event", "Snowball Earth extinction"],
+                answer: 2,
+                explanation: "The Great Oxidation Event around 2.4 billion years ago caused the first mass extinction by poisoning anaerobic organisms with oxygen."
+            },
+            {
+                question: "Which theory suggests that mitochondria and chloroplasts originated from free-living prokaryotes that entered into a symbiotic relationship with ancestral eukaryotic cells?",
+                options: ["Cell theory", "Endosymbiotic theory", "Germ theory", "Theory of inheritance of acquired characteristics"],
+                answer: 1,
+                explanation: "The Endosymbiotic Theory explains how mitochondria and chloroplasts evolved from prokaryotic organisms living inside ancestral eukaryotic cells."
+            },
+            {
+                question: "What term describes the transfer of genetic material from one species to another species by mechanisms other than parent-to-offspring transmission?",
+                options: ["Vertical gene transfer", "Horizontal gene transfer", "Genetic recombination", "Gene duplication"],
+                answer: 1,
+                explanation: "Horizontal gene transfer (HGT) involves the transfer of genes between unrelated species, not from parent to offspring."
+            },
+            {
+                question: "Which of the following is an example of a vestigial structure in humans?",
+                options: ["The heart", "The appendix", "The lungs", "The liver"],
+                answer: 1,
+                explanation: "The appendix is considered a vestigial structure—a remnant from an ancestor that had a functional use but now has little or no function."
+            },
+            {
+                question: "What does the 'Cambrian Explosion' refer to?",
+                options: ["A mass extinction event", "The formation of the moon", "A rapid diversification of life forms", "The breakup of Pangaea"],
+                answer: 2,
+                explanation: "The Cambrian Explosion was a period approximately 541 million years ago when most major animal phyla appeared in the fossil record."
+            },
+            {
+                question: "Which scientist developed the binomial nomenclature system still used today to name species?",
+                options: ["Charles Darwin", "Gregor Mendel", "Carl Linnaeus", "Alfred Russel Wallace"],
+                answer: 2,
+                explanation: "Carl Linnaeus developed the binomial nomenclature system where each species is given a two-part name (genus and species)."
+            },
+            {
+                question: "What is the term for a trait that improves an organism's survival and reproduction in its environment?",
+                options: ["Mutation", "Adaptation", "Variation", "Allele"],
+                answer: 1,
+                explanation: "An adaptation is a heritable trait that enhances an organism's ability to survive and reproduce in its environment."
+            },
+            {
+                question: "Which of the following is NOT one of the three domains of life in modern classification?",
+                options: ["Bacteria", "Archaea", "Eukarya", "Protista"],
+                answer: 3,
+                explanation: "Protista is a kingdom within the domain Eukarya, not a domain itself. The three domains are Bacteria, Archaea, and Eukarya."
+            },
+            {
+                question: "What is the term for the study of evolutionary relationships among organisms?",
+                options: ["Taxonomy", "Phylogenetics", "Embryology", "Biogeography"],
+                answer: 1,
+                explanation: "Phylogenetics is the study of evolutionary relationships, often represented in phylogenetic trees."
+            },
+            {
+                question: "Which evolutionary mechanism is most important in small populations and involves random changes in allele frequencies?",
+                options: ["Natural selection", "Mutation", "Genetic drift", "Gene flow"],
+                answer: 2,
+                explanation: "Genetic drift is the change in allele frequencies due to random chance, and it has a greater effect in small populations."
+            },
+            {
+                question: "What is the name of the hypothesis suggesting that Earth's surface was completely frozen during extreme cooling events in the Proterozoic eon?",
+                options: ["Greenhouse Earth", "Snowball Earth", "Ice Age Earth", "Slushball Earth"],
+                answer: 1,
+                explanation: "The Snowball Earth hypothesis proposes that Earth's surface was entirely or nearly entirely frozen at least twice during the Proterozoic eon."
+            },
+            {
+                question: "Which era is known as the 'Age of Dinosaurs'?",
+                options: ["Paleozoic", "Mesozoic", "Cenozoic", "Precambrian"],
+                answer: 1,
+                explanation: "The Mesozoic Era (252 to 66 million years ago) is known as the Age of Dinosaurs."
+            },
+            {
+                question: "What type of evidence for evolution involves comparing the development of embryos across different species?",
+                options: ["Fossil evidence", "Biogeographical evidence", "Embryological evidence", "Molecular evidence"],
+                answer: 2,
+                explanation: "Embryological evidence compares embryonic development across species to show evolutionary relationships."
+            },
+            {
+                question: "Which of the following processes is involved in recombinant DNA technology?",
+                options: ["Natural selection", "Gene cloning", "Genetic drift", "Speciation"],
+                answer: 1,
+                explanation: "Gene cloning is a key technique in recombinant DNA technology, allowing genes to be copied and inserted into different organisms."
+            },
+            {
+                question: "What is the term for the evolutionary process where two unrelated species develop similar traits due to similar environmental pressures?",
+                options: ["Divergent evolution", "Convergent evolution", "Coevolution", "Parallel evolution"],
+                answer: 1,
+                explanation: "Convergent evolution occurs when unrelated species independently evolve similar traits as adaptations to similar environments."
+            },
+            {
+                question: "Which mass extinction event wiped out approximately 96% of all marine species and is known as 'The Great Dying'?",
+                options: ["Ordovician-Silurian extinction", "Late Devonian extinction", "Permian-Triassic extinction", "Cretaceous-Paleogene extinction"],
+                answer: 2,
+                explanation: "The Permian-Triassic extinction event, about 252 million years ago, was the most severe mass extinction, wiping out about 96% of marine species."
+            },
+            {
+                question: "What is the term for structures that have similar functions but different evolutionary origins?",
+                options: ["Homologous structures", "Analogous structures", "Vestigial structures", "Embryonic structures"],
+                answer: 1,
+                explanation: "Analogous structures have similar functions but different evolutionary origins (e.g., bird wings vs. insect wings)."
+            },
+            {
+                question: "Which of the following is an example of a postzygotic reproductive barrier?",
+                options: ["Temporal isolation", "Habitat isolation", "Hybrid infertility", "Behavioral isolation"],
+                answer: 2,
+                explanation: "Hybrid infertility is a postzygotic barrier where hybrids are produced but are sterile or have reduced fertility."
+            },
+            {
+                question: "What is the name of the era we are currently living in?",
+                options: ["Mesozoic", "Paleozoic", "Cenozoic", "Precambrian"],
+                answer: 2,
+                explanation: "We are currently in the Cenozoic Era, which began about 66 million years ago after the extinction of dinosaurs."
+            },
+            {
+                question: "Which of the following best describes the bottleneck effect?",
+                options: ["Migration of individuals between populations", "A rapid expansion of population size", "A reduction in genetic diversity after a population decline", "The formation of new species"],
+                answer: 2,
+                explanation: "The bottleneck effect occurs when a population's size is significantly reduced, leading to a loss of genetic diversity."
+            },
+            {
+                question: "What is the primary source of new genetic variation in populations?",
+                options: ["Natural selection", "Genetic drift", "Mutation", "Gene flow"],
+                answer: 2,
+                explanation: "Mutation is the ultimate source of new genetic variation, creating new alleles that can be acted upon by other evolutionary forces."
+            },
+            {
+                question: "Which of the following is NOT a mechanism of horizontal gene transfer in prokaryotes?",
+                options: ["Transformation", "Transduction", "Conjugation", "Meiosis"],
+                answer: 3,
+                explanation: "Meiosis is a type of cell division in eukaryotes, not a mechanism of horizontal gene transfer in prokaryotes."
+            },
+            {
+                question: "What is the term for the evolutionary history and relationship of an organism or group of organisms?",
+                options: ["Taxonomy", "Phylogeny", "Ontogeny", "Biogeography"],
+                answer: 1,
+                explanation: "Phylogeny describes the evolutionary history and relationships among organisms or groups of organisms."
+            },
+            {
+                question: "Which of the following is an example of behavioral adaptation?",
+                options: ["Camouflage coloration", "Migration to warmer climates", "Production of venom", "Development of wings"],
+                answer: 1,
+                explanation: "Migration is a behavioral adaptation where organisms move to more favorable environments in response to seasonal changes."
+            },
+            {
+                question: "What does the principle of maximum parsimony in phylogenetics suggest?",
+                options: ["The tree with the most branches is most accurate", "Evolution always follows the simplest path", "The tree with the fewest evolutionary changes is preferred", "Genetic distance is more important than morphological similarity"],
+                answer: 2,
+                explanation: "Maximum parsimony suggests that the phylogenetic tree requiring the fewest evolutionary changes (simplest explanation) is most likely correct."
+            },
+            {
+                question: "Which of the following best describes genetic recombination?",
+                options: ["The movement of genes between populations", "The creation of new alleles", "The exchange of genetic material during meiosis", "The random change in allele frequencies"],
+                answer: 2,
+                explanation: "Genetic recombination occurs during meiosis when chromosomes exchange genetic material, creating new combinations of alleles."
+            },
+            {
+                question: "What is the term for a group of organisms that includes an ancestor and all of its descendants?",
+                options: ["Polyphyletic group", "Paraphyletic group", "Monophyletic group", "Phylum"],
+                answer: 2,
+                explanation: "A monophyletic group (clade) includes an ancestral species and all of its descendants."
+            },
+            {
+                question: "Which of the following eras is known for the diversification of mammals?",
+                options: ["Paleozoic", "Mesozoic", "Cenozoic", "Precambrian"],
+                answer: 2,
+                explanation: "The Cenozoic Era is known as the Age of Mammals, following the extinction of dinosaurs at the end of the Mesozoic."
+            },
+            {
+                question: "What is the term for the physical separation of a population into smaller, isolated populations?",
+                options: ["Genetic drift", "Founder effect", "Allopatric speciation", "Sympatric speciation"],
+                answer: 2,
+                explanation: "Allopatric speciation occurs when a population is geographically separated into isolated groups that evolve independently."
+            },
+            {
+                question: "Which of the following is an application of recombinant DNA technology?",
+                options: ["Creating phylogenetic trees", "Producing insulin using bacteria", "Studying fossil records", "Classifying organisms"],
+                answer: 1,
+                explanation: "Recombinant DNA technology is used to produce human insulin by inserting the human insulin gene into bacteria."
+            },
+            {
+                question: "What is the term for the total genetic information contained within a population?",
+                options: ["Gene pool", "Genome", "Gene frequency", "Genetic load"],
+                answer: 0,
+                explanation: "The gene pool is the complete set of genetic information (all alleles) present in a population."
+            },
+            {
+                question: "Which of the following is NOT a type of adaptation?",
+                options: ["Structural", "Behavioral", "Physiological", "Geological"],
+                answer: 3,
+                explanation: "Geological is not a type of adaptation. The three main types are structural, behavioral, and physiological adaptations."
+            },
+            {
+                question: "What is the term for the study of the geographic distribution of organisms?",
+                options: ["Phylogenetics", "Taxonomy", "Biogeography", "Paleontology"],
+                answer: 2,
+                explanation: "Biogeography is the study of the geographic distribution of species and ecosystems through geological time."
+            },
+            {
+                question: "Which of the following is an example of homologous structures?",
+                options: ["Wings of bats and wings of butterflies", "Flippers of whales and arms of humans", "Eyes of octopuses and eyes of humans", "Fins of fish and wings of birds"],
+                answer: 1,
+                explanation: "Whale flippers and human arms are homologous structures—they have the same basic bone structure due to common ancestry."
+            },
+            {
+                question: "What is the term for the variety of different species within a habitat or region?",
+                options: ["Genetic diversity", "Species diversity", "Ecosystem diversity", "Phylogenetic diversity"],
+                answer: 1,
+                explanation: "Species diversity refers to the variety of different species in a particular area or ecosystem."
+            },
+            {
+                question: "Which mechanism of evolution involves the movement of alleles between populations?",
+                options: ["Mutation", "Genetic drift", "Gene flow", "Natural selection"],
+                answer: 2,
+                explanation: "Gene flow involves the transfer of alleles from one population to another through migration of individuals or gametes."
+            },
+            {
+                question: "What is the term for a characteristic that is shared by two or more species because of common ancestry?",
+                options: ["Analogous trait", "Homologous trait", "Derived trait", "Vestigial trait"],
+                answer: 1,
+                explanation: "Homologous traits are shared by different species due to inheritance from a common ancestor."
+            },
+            {
+                question: "Which of the following best describes microevolution?",
+                options: ["The origin of new species", "Large-scale evolutionary changes over long periods", "Changes in allele frequencies within a population", "The formation of new kingdoms of life"],
+                answer: 2,
+                explanation: "Microevolution refers to small-scale changes in allele frequencies within a population over a relatively short period."
+            },
+            {
+                question: "What is the term for the random change in DNA sequence that can create new alleles?",
+                options: ["Genetic drift", "Recombination", "Mutation", "Gene flow"],
+                answer: 2,
+                explanation: "Mutation is a change in the DNA sequence that can create new alleles, providing raw material for evolution."
+            },
+            {
+                question: "Which of the following is NOT a component of natural selection as described by Darwin?",
+                options: ["Variation exists within populations", "Some variations are heritable", "More offspring are produced than can survive", "All individuals have equal reproductive success"],
+                answer: 3,
+                explanation: "Darwin observed that individuals do NOT have equal reproductive success—some are better adapted and leave more offspring."
+            },
+            {
+                question: "What is the term for the splitting of a single lineage into two or more distinct species?",
+                options: ["Adaptive radiation", "Speciation", "Genetic divergence", "Phylogenetic splitting"],
+                answer: 1,
+                explanation: "Speciation is the evolutionary process by which populations evolve to become distinct species."
+            },
+            {
+                question: "Which of the following is an example of a prezygotic reproductive barrier?",
+                options: ["Hybrid sterility", "Hybrid inviability", "Temporal isolation", "Hybrid breakdown"],
+                answer: 2,
+                explanation: "Temporal isolation is a prezygotic barrier where species reproduce at different times, preventing mating."
+            },
+            {
+                question: "What is the term for the evolutionary process where one species evolves in response to changes in another species?",
+                options: ["Convergent evolution", "Divergent evolution", "Coevolution", "Parallel evolution"],
+                answer: 2,
+                explanation: "Coevolution occurs when two or more species reciprocally affect each other's evolution (e.g., predators and prey, pollinators and flowers)."
+            },
+            {
+                question: "Which of the following is NOT a level in the taxonomic hierarchy?",
+                options: ["Phylum", "Class", "Family", "Population"],
+                answer: 3,
+                explanation: "Population is an ecological term, not a taxonomic rank. The main taxonomic ranks are domain, kingdom, phylum, class, order, family, genus, species."
+            },
+            {
+                question: "What is the term for the phenomenon where certain traits increase an organism's mating success, even if they don't improve survival?",
+                options: ["Natural selection", "Sexual selection", "Artificial selection", "Kin selection"],
+                answer: 1,
+                explanation: "Sexual selection favors traits that increase mating success, such as elaborate plumage or mating displays."
+            },
+            {
+                question: "Which of the following is evidence for evolution from molecular biology?",
+                options: ["Similar bone structures in different vertebrates", "Geographic distribution of species", "Similarities in DNA sequences", "Fossil records showing transitional forms"],
+                answer: 2,
+                explanation: "Similarities in DNA and protein sequences among different species provide molecular evidence for common ancestry."
+            },
+            {
+                question: "What is the term for the total elimination of a species from Earth?",
+                options: ["Extirpation", "Extinction", "Speciation", "Divergence"],
+                answer: 1,
+                explanation: "Extinction is the complete disappearance of a species from Earth."
+            },
+            {
+                question: "Which of the following is an example of artificial selection?",
+                options: ["The development of antibiotic resistance in bacteria", "The breeding of dogs from wolves", "The evolution of different beak shapes in finches", "The adaptation of moths to industrial pollution"],
+                answer: 1,
+                explanation: "Artificial selection is the intentional breeding of organisms for desirable traits, such as breeding dogs from wolves."
+            },
+            {
+                question: "What is the term for the specific role or position of an organism in its environment?",
+                options: ["Habitat", "Niche", "Ecosystem", "Community"],
+                answer: 1,
+                explanation: "A niche describes an organism's role in its environment, including its use of resources and interactions with other species."
+            }
+        ];
+
+        // Quiz state variables
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let quizCompleted = false;
+
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const startBtn = document.getElementById('start-btn');
+        const tryAgainBtn = document.getElementById('try-again-btn');
+        const winBtn = document.getElementById('win-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedback = document.getElementById('feedback');
+        const scoreDisplay = document.getElementById('score');
+        const currentQuestionDisplay = document.getElementById('current-question');
+        const progressBar = document.getElementById('progress');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
+        const emojiResult = document.getElementById('emoji-result');
+
+        // Initialize the quiz
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers.fill(null);
+            quizCompleted = false;
+            updateScoreDisplay();
+            loadQuestion(currentQuestionIndex);
+            updateProgressBar();
+            
+            // Hide/show appropriate screens
+            startScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+        }
+
+        // Load a question
+        function loadQuestion(index) {
+            const question = questions[index];
+            questionText.textContent = question.question;
+            currentQuestionDisplay.textContent = index + 1;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Create option elements
+            question.options.forEach((option, optionIndex) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (userAnswers[index] === optionIndex) {
+                    optionElement.classList.add('selected');
+                    if (quizCompleted) {
+                        optionElement.classList.add(optionIndex === question.answer ? 'correct' : 'incorrect');
+                    }
+                }
+                
+                optionElement.innerHTML = `
+                    <span class="option-label">${String.fromCharCode(65 + optionIndex)}</span>
+                    <span class="option-text">${option}</span>
+                `;
+                
+                optionElement.addEventListener('click', () => selectOption(optionIndex));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update feedback if already answered
+            if (userAnswers[index] !== null) {
+                showFeedback(index);
+            } else {
+                feedback.className = 'feedback';
+                feedback.innerHTML = '';
+            }
+            
+            // Update button states
+            prevBtn.disabled = index === 0;
+            nextBtn.textContent = index === questions.length - 1 ? 'Finish' : 'Next';
+            nextBtn.innerHTML = index === questions.length - 1 ? 
+                'Finish <i class="fas fa-flag-checkered"></i>' : 
+                'Next <i class="fas fa-arrow-right"></i>';
+        }
+
+        // Select an option
+        function selectOption(optionIndex) {
+            if (quizCompleted || userAnswers[currentQuestionIndex] !== null) return;
+            
+            const question = questions[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = optionIndex;
+            
+            // Update score if correct
+            if (optionIndex === question.answer) {
+                score++;
+                updateScoreDisplay();
+            }
+            
+            // Show feedback
+            showFeedback(currentQuestionIndex);
+            
+            // Update UI
+            loadQuestion(currentQuestionIndex);
+            
+            // Enable next button if not already enabled
+            nextBtn.disabled = false;
+        }
+
+        // Show feedback for a question
+        function showFeedback(index) {
+            const question = questions[index];
+            const userAnswerIndex = userAnswers[index];
+            const isCorrect = userAnswerIndex === question.answer;
+            
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = `
+                <div class="feedback-title">
+                    ${isCorrect ? '<i class="fas fa-check-circle"></i> Correct!' : '<i class="fas fa-times-circle"></i> Incorrect!'}
+                </div>
+                <div>${question.explanation}</div>
+                ${!isCorrect ? 
+                    `<div class="correct-answer"><strong>Correct answer:</strong> ${String.fromCharCode(65 + question.answer)}. ${question.options[question.answer]}</div>` 
+                    : ''}
+            `;
+        }
+
+        // Update score display
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = score;
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+                updateProgressBar();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+                updateProgressBar();
+            }
+        }
+
+        // Finish the quiz
+        function finishQuiz() {
+            quizCompleted = true;
+            
+            // Calculate final score
+            const percentage = (score / questions.length) * 100;
+            finalScoreDisplay.textContent = `${score}/${questions.length}`;
+            
+            // Set result message and emoji
+            let message = '';
+            let emoji = '';
+            
+            if (percentage >= 90) {
+                message = "Outstanding! You're an evolution expert!";
+                emoji = "🏆";
+            } else if (percentage >= 75) {
+                message = "Great job! You have a solid understanding of evolutionary biology.";
+                emoji = "🎯";
+            } else if (percentage >= 60) {
+                message = "Good effort! You know the basics but could use more study.";
+                emoji = "👍";
+            } else if (percentage >= 40) {
+                message = "Keep studying! Review the concepts and try again.";
+                emoji = "📚";
+            } else {
+                message = "Time to hit the books! Focus on the key concepts and try again.";
+                emoji = "💪";
+            }
+            
+            scoreMessage.textContent = message;
+            emojiResult.textContent = emoji;
+            
+            // Show results screen
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', initQuiz);
+        tryAgainBtn.addEventListener('click', initQuiz);
+        winBtn.addEventListener('click', () => {
+            alert("💀 Confidence is key! With that attitude, you'll ace it next time!");
+        });
+        prevBtn.addEventListener('click', prevQuestion);
+        nextBtn.addEventListener('click', nextQuestion);
+
+        // Initialize first question when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load the first question but keep it hidden until start is clicked
+            loadQuestion(0);
+            updateProgressBar();
+        });
+    </script>
+</body>
+</html>
